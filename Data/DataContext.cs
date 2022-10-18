@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RpgApi.Models;
 using RpgApi.Models.Enuns;
-
+using RpgApi.Utils;
 
 namespace RpgApi.Data
 {
@@ -11,11 +11,14 @@ namespace RpgApi.Data
         {
             
         }
+        public DbSet<Habilidade> Habilidades { get; set; }
+        public DbSet<PersonagemHabilidade> PersonagemHabilidades { get; set; }
+        public DbSet<Arma> Armas {get; set;}
         public DbSet<Personagem> Personagens { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelbuilder)
+        public DbSet<Usuario> Usuario { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           modelbuilder.Entity<Personagem>().HasData
+           modelBuilder.Entity<Personagem>().HasData
            (
              new Personagem() { Id = 1, Nome = "Frodo", PontosVida=100, Forca=17, Defesa=23, Inteligencia=33, Classe=ClasseEnum.Cavaleiro},
             new Personagem() { Id = 2, Nome = "Sam", PontosVida=100, Forca=15, Defesa=25, Inteligencia=30, Classe=ClasseEnum.Cavaleiro},
@@ -26,7 +29,57 @@ namespace RpgApi.Data
             new Personagem() { Id = 7, Nome = "Radagast", PontosVida=100, Forca=25, Defesa=11, Inteligencia=35, Classe=ClasseEnum.Mago }
            );
 
-            
+           modelBuilder.Entity<Arma>().HasData
+           (
+            new Arma() { Id =1, Nome = "Ak",Dano = 10, PersonagemId = 1 },
+            new Arma() { Id =2, Nome = "Facao",Dano = 4, PersonagemId = 2 },
+            new Arma() { Id =3, Nome = "Machado",Dano = 5, PersonagemId = 3 },
+            new Arma() { Id =4, Nome = "Espada",Dano = 8, PersonagemId = 4 },
+            new Arma() { Id =5, Nome = "Estilingue",Dano = 2, PersonagemId = 5 },
+            new Arma() { Id =6, Nome = "Enxada",Dano = 7, PersonagemId = 6 },
+            new Arma() { Id =7, Nome = "Cerrinha de Pao",Dano = 100, PersonagemId = 7 }
+           );
+
+           modelBuilder.Entity<PersonagemHabilidade>()
+                .HasKey(ph => new {ph.PersonagemId, ph.HabilidadeId});
+
+           modelBuilder.Entity<Habilidade>().HasData
+           (
+            new Habilidade(){Id=1,Nome="Adormecer", Dano=39},
+            new Habilidade(){Id=2,Nome="Congelar", Dano=41},
+            new Habilidade(){Id=3,Nome="Hipnotizar", Dano=37}
+           );
+
+           modelBuilder.Entity<PersonagemHabilidade>().HasData
+           (
+            new PersonagemHabilidade() { PersonagemId = 1, HabilidadeId = 1},
+            new PersonagemHabilidade() { PersonagemId = 1, HabilidadeId = 2},
+            new PersonagemHabilidade() { PersonagemId = 2, HabilidadeId = 2},
+            new PersonagemHabilidade() { PersonagemId = 3, HabilidadeId = 2},
+            new PersonagemHabilidade() { PersonagemId = 3, HabilidadeId = 3},
+            new PersonagemHabilidade() { PersonagemId = 4, HabilidadeId = 3},
+            new PersonagemHabilidade() { PersonagemId = 5, HabilidadeId = 1},
+            new PersonagemHabilidade() { PersonagemId = 6, HabilidadeId = 2},
+            new PersonagemHabilidade() { PersonagemId = 7, HabilidadeId = 3}
+           );
+
+            //Início da criação do usuário padrão.
+            Usuario user = new Usuario();
+            Criptografia.CriarPasswordHash("123456", out byte[] hash, out byte[]salt);
+            user.Id = 1;
+            user.Username = "UsuarioAdmin";
+            user.PasswordString = string.Empty;
+            user.PasswordHash = hash;
+            user.PasswordSalt = salt;
+            user.Perfil = "Admin";
+            user.Foto = hash; 
+            user.Email = "usuario@gmail.com";
+
+            modelBuilder.Entity<Usuario>().HasData(user);            
+            //Fim da criação do usuário padrão.   
+
+            //Define que se o Perfil não for informado, o valor padrão será jogador
+            modelBuilder.Entity<Usuario>().Property(u => u.Perfil).HasDefaultValue("Jogador");
         }
     }
 }

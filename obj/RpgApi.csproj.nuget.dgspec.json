@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\idalvo\\Ds\\Aula06\\RpgApi\\RpgApi.csproj": {}
+    "D:\\idalvo\\Ds\\RpgApi\\RpgApi.csproj": {}
   },
   "projects": {
-    "D:\\idalvo\\Ds\\Aula06\\RpgApi\\RpgApi.csproj": {
+    "D:\\idalvo\\Ds\\RpgApi\\RpgApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\idalvo\\Ds\\Aula06\\RpgApi\\RpgApi.csproj",
+        "projectUniqueName": "D:\\idalvo\\Ds\\RpgApi\\RpgApi.csproj",
         "projectName": "RpgApi",
-        "projectPath": "D:\\idalvo\\Ds\\Aula06\\RpgApi\\RpgApi.csproj",
+        "projectPath": "D:\\idalvo\\Ds\\RpgApi\\RpgApi.csproj",
         "packagesPath": "C:\\Users\\EtecHAS\\.nuget\\packages\\",
-        "outputPath": "D:\\idalvo\\Ds\\Aula06\\RpgApi\\obj\\",
+        "outputPath": "D:\\idalvo\\Ds\\RpgApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\EtecHAS\\AppData\\Roaming\\NuGet\\NuGet.Config",
