@@ -21,12 +21,19 @@ namespace RpgApi.Controllers
         //Programação de toda a classe ficará aqui abaixo
         private readonly DataContext _context; //Declaração do atributo
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public PersonagensController(DataContext context, IConfiguration configuration)
         {
             //Inicialização do atributo a partir de um parâmetro          
             _context = context;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        private int ObterUsuarioId()
+        {
+            return int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
         }
 
         [HttpGet("{id}")] //Buscar pelo id
@@ -72,6 +79,9 @@ namespace RpgApi.Controllers
                 {
                     throw new System.Exception("Pontos de vida não pode ser maior que 100");
                 }
+
+                novoPersonagem.Usuario = _context.Usuarios.FirstOrDefault(uBusca => uBusca.Id == ObterUsuarioId());
+
                 await _context.Personagens.AddAsync(novoPersonagem);
                 await _context.SaveChangesAsync();
 
@@ -92,6 +102,9 @@ namespace RpgApi.Controllers
                 {
                     throw new System.Exception("Pontos de vida não pode ser maior que 100");
                 }
+
+                novoPersonagem.Usuario = _context.Usuarios.FirstOrDefault(uBusca => uBusca.Id == ObterUsuarioId());
+
                 _context.Personagens.Update(novoPersonagem);
                 int linhasAfetadas = await _context.SaveChangesAsync();
 
@@ -216,7 +229,7 @@ namespace RpgApi.Controllers
             }
         }
 
-         [HttpGet("GetByUser/{userId}")]
+        [HttpGet("GetByUser/{userId}")]
         public async Task<IActionResult> GetByUserAsync(int userId)
         {
             try
@@ -238,17 +251,17 @@ namespace RpgApi.Controllers
         {
             try
             {
-                Usuario usuario = await _context.Usuarios 
+                Usuario usuario = await _context.Usuarios
                    .FirstOrDefaultAsync(x => x.Id == userId);
 
                 List<Personagem> lista = new List<Personagem>();
 
-                if(usuario.Perfil == "Admin")                
-                    lista = await _context.Personagens.ToListAsync();                
-                else                
+                if (usuario.Perfil == "Admin")
+                    lista = await _context.Personagens.ToListAsync();
+                else
                     lista = await _context.Personagens
                             .Where(p => p.Usuario.Id == userId).ToListAsync();
-                
+
                 return Ok(lista);
             }
             catch (System.Exception ex)
