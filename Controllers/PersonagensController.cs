@@ -23,7 +23,7 @@ namespace RpgApi.Controllers
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PersonagensController(DataContext context, IConfiguration configuration)
+        public PersonagensController(DataContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             //Inicialização do atributo a partir de um parâmetro          
             _context = context;
